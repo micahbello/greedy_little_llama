@@ -13,9 +13,9 @@ document.addEventListener("DOMContentLoaded", function() {
   //the Balls
 
   let balls = [
-    new Ball("blue", 100, 300, 5),
-    new Ball("black", 10, 20, 5),
-    new Ball("red", 10, 300, 10),
+    // new Ball("blue", 100, 300, 5),
+    // new Ball("black", 10, 20, 5),
+    // new Ball("red", 10, 300, 10),
     new Ball("green", 200, 300, 10)];
 
   //the ledges

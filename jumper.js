@@ -8,15 +8,17 @@ document.addEventListener("DOMContentLoaded", function() {
   const canvasEl = document.getElementById("mycanvas");
   const ctx = canvasEl.getContext("2d");
 
+  canvasEl.width = 600;
+  canvasEl.height = 300;
   //the jumper
-  let jumperMan = new Jumper("red", 25, 25, 0, 0)
+  let jumperMan = new Jumper("red", 25, 25, 0, 275)
   //the Balls
 
   let balls = [
-    // new Ball("blue", 100, 300, 5),
-    // new Ball("black", 10, 20, 5),
-    // new Ball("red", 10, 300, 10),
-    new Ball("green", 200, 300, 10)];
+    new Ball("blue", 100, 300, 5),
+    new Ball("black", 10, 20, 5),
+    new Ball("red", 10, 300, 5),
+    new Ball("green", 200, 300, 5)];
 
   //the ledges
   let ledges = [];
@@ -35,10 +37,15 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
 
-  for (let i = 0; i < 1200; i++) {
-     ledges.push(new Ledge("purple", -(randomXCoord(0, 100000)), randomYCoord(0, 250),
+  for (let i = 0; i < 10; i++) {
+     ledges.push(new Ledge("purple", -(randomXCoord(0, 600)), randomYCoord(50, 250),
     randomSpeed(.1, .3)));
   }
+
+  // for (let i = 0; i < 1; i++) { // only for testing
+  //    ledges.push(new Ledge("purple", 50, 270,
+  //   randomSpeed(0, 0)));
+  // }
 
   //the gameloop
   let game = new Game(jumperMan, balls, ledges, ctx);
@@ -46,10 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
   window.addEventListener("keydown", (e) => jumperMan.keyDownHandler(e));
   window.addEventListener("keyup", (e) => jumperMan.keyUpHandler(e));
 
-
-  // setInterval(() => jumperMan.update(ctx), 1);
   setInterval(() => game.loop(), 1);
 
-  // setInterval(ball.draw(ctx), 1);
 
 });

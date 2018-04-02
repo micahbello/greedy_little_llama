@@ -12,10 +12,10 @@ document.addEventListener("DOMContentLoaded", function() {
   canvasEl.width = 600;
   canvasEl.height = 300;
   //the jumper
-  let jumperMan = new Jumper("red", 25, 25, 0, 275)
+  let jumperMan = new Jumper("red", 25, 15, 0, 275)
   //the Balls
 
-  let balls = [new Ball("black", 200, 300)];
+  let balls = [new Ball("black", 598, 3)];
 
   //the ledges
   let ledges = [];
@@ -63,10 +63,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
   let specialBalls = ["red", "green", "yellow", "brown"]
 
-  // setInterval(() => game.newBall("red"), 1000);
 
-
-  setInterval(() => game.newBall(specialBalls[Math.floor(Math.random() * 3)]), 100000);
-  // setInterval(() => game.checkBallStatus(), 1000)
+  setInterval(() => game.newBall(specialBalls[Math.floor(Math.random() * 4)]), 15000);
+  setInterval(() => game.checkBallStatus(), 1000)
 
 });

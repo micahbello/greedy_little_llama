@@ -1,5 +1,6 @@
 .page {
   background-color: #b7e0f2;
+  font-family: monospace;
 }
 
 #mycanvas {
@@ -18,7 +19,13 @@
 
 .instructions {
   text-align: left;
-  width: 38%;
+  margin-left: 40px;
+  width: 31%;
+  margin-top: -22px;
+}
+
+.instruction-list {
+  display: flex;
 }
 
 .body {
@@ -29,10 +36,105 @@
   width: 50%
 }
 
+.tag-line {
+  text-align: center;
+}
+
 .main_container {
   display: flex;
   margin-top: 140px;
 }
+
+.left-rigth-span {
+  display: flex;
+  margin-left: 3px;
+  margin-bottom: -29px;
+}
+
+#up-sect {
+  margin-left: 50px;
+  margin-bottom: -22px;
+}
+
+#left-descript {
+  margin-top: 4px;
+  margin-left: 4px;
+}
+
+#right-descript {
+  margin-top: 3px;
+  margin-left: 4px;
+}
+
+#up-descript {
+  margin-top: 4px;
+}
+
+#coin_icon {
+  margin-top: 4px;
+}
+
+#pig_descript{
+  margin-left: 5px;
+}
+
+#coin_descript {
+  margin-left: 7px;
+}
+
+#pig_icon {
+  margin-top: 7px;
+  margin-left: -10px;
+}
+
+#taco_icon {
+  margin-top: 8px;
+}
+
+#star_icon {
+  margin-top: 12px;
+}
+
+
+#star_descript{
+  margin-left: 5px;
+}
+
+#heart_icon {
+  margin-top: 15px;
+}
+
+#heart_descript {
+  margin-left: 10px;
+}
+
+#mud_icon {
+  margin-top: 4px;
+  margin-left: -4px;
+}
+
+#pig_sect {
+  margin-top: -23px;
+}
+
+#taco_sect {
+  margin-top: -23px;
+  margin-left: -15px;
+}
+
+#star_sect {
+  margin-top: -29px;
+  margin-left: -6px;
+}
+
+#heart_sect {
+  margin-top: -23px;
+}
+
+#mud_sect {
+  margin-top: -26px;
+}
+
 
 .pig_image {
 width: 18%;

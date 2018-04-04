@@ -13,17 +13,55 @@
 
     <div class="main_container">
       <div class="instructions">
-        <h3>Little Llama lives with his head in the clouds. He is daydreaming at the moment.</h3>
+        <h3 class="tag-line">Get as many coins as possible before health reaches 0.</h3>
 
-          <ul>
-            <li>Get as many coins as possible before your health reaches 0</li>
-            <li>Pigs are bad, they bite.</li>
-            <li>Tacos make you jump super high.</li>
-            <li>Stars make pigs harmless.</li>
-            <li>Hearts are for health.</li>
-            <li>Mud makes a few pigs disappear</li>
+          <div class="left-rigth-span">
+              <ul id="" class="instruction-list">
+                <div><img src="./assets/images/left-icon.png"> </div>
+                <p id="left-descript">= left</p>
+              </ul>
 
-          </ul>
+              <ul id="" class="instruction-list">
+                <div><img src="./assets/images/right-icon.png"> </div>
+                <p id="right-descript">= right</p>
+              </ul>
+          </div>
+
+            <ul id="up-sect" class="instruction-list">
+              <div><img src="./assets/images/up-icon.png"> </div>
+              <p id="up-descript">= jump</p>
+            </ul>
+
+            <ul id="coin_sect" class="instruction-list">
+              <div><img src="./assets/images/coin-icon.png"> </div>
+              <p id="coin_descript">= point increase</p>
+            </ul>
+
+            <ul id="pig_sect" class="instruction-list">
+              <div><img id="pig_icon" src="./assets/images/pig-icon.png"></div>
+              <p id="pig_descript">= health decrease</p>
+            </ul>
+
+            <ul id="taco_sect" class="instruction-list">
+              <div><img id="taco_icon" src="./assets/images/taco-image.png"> </div>
+              <p>= 10 seconds super jump</p>
+            </ul>
+
+            <ul id="star_sect" class="instruction-list">
+              <div><img id="star_icon" src="./assets/images/star-image.png"></div>
+              <p id="star_descript">= 10 seconds invinsibility</p>
+            </ul>
+
+            <ul id="heart_sect" class="instruction-list">
+              <div><img id="heart_icon" src="./assets/images/heart-image.png"></div>
+              <p id="heart_descript">= health increase</p>
+            </ul>
+
+            <ul id="mud_sect" class="instruction-list">
+              <div><img id="mud_icon" src="./assets/images/mud-image.png"></div>
+              <p>= a pig disappears</p>
+            </ul>
+
       </div>
       <div>
         <canvas id="mycanvas" ></canvas>

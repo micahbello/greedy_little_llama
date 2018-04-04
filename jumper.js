@@ -53,13 +53,17 @@ document.addEventListener("DOMContentLoaded", function() {
   let game = new Game(jumperMan, balls, ledges, prize, ctx);
 
 
+  window.addEventListener("keydown", (e) => game.keyDownHandler(e));
   window.addEventListener("keydown", (e) => jumperMan.keyDownHandler(e));
+
   window.addEventListener("keyup", (e) => jumperMan.keyUpHandler(e));
+  // window.addEventListener("keyup", (e) => game.keyUpHandler(e));
 
 
 
   setInterval(() => game.loop(), 2);
-  setInterval(() => game.prize.prizeFlash(), 150)
+
+  // setInterval(() => game.prize.prizeFlash(), 150)
 
   let specialBalls = ["red", "green", "yellow", "brown"]
 

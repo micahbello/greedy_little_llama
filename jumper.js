@@ -4,7 +4,6 @@ import Ledge from './lib/ledge';
 import Ball from './lib/ball';
 import Prize from './lib/prize';
 
-
 document.addEventListener("DOMContentLoaded", function() {
   const canvasEl = document.getElementById("mycanvas");
   const ctx = canvasEl.getContext("2d");
@@ -46,6 +45,12 @@ document.addEventListener("DOMContentLoaded", function() {
   window.addEventListener("keydown", (e) => game.keyDownHandler(e));
   window.addEventListener("keydown", (e) => jumperMan.keyDownHandler(e));
   window.addEventListener("keyup", (e) => jumperMan.keyUpHandler(e));
+
+  // const audio = document.getElementById("salvation");
+  // audio.play();
+  //
+  // const audio = new Audio("./assets/audio/sneakysnitch.mp3");
+  // audio.play();
 
   setInterval(() => game.loop(), 2);
   // setInterval(() => game.prize.prizeFlash(), 150)   //no longer needed since coin is spinning

@@ -216,7 +216,7 @@ class Jumper {
       if (this.velocity < 0) {
         this.velocity += 1;
       } else {
-        this.velocity += 0.03;
+        this.velocity += 0.019;  //this slows the llama down when he jumps
       }
 
       this.y += this.velocity
@@ -533,7 +533,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-
 document.addEventListener("DOMContentLoaded", function() {
   const canvasEl = document.getElementById("mycanvas");
   const ctx = canvasEl.getContext("2d");
@@ -576,6 +575,12 @@ document.addEventListener("DOMContentLoaded", function() {
   window.addEventListener("keydown", (e) => jumperMan.keyDownHandler(e));
   window.addEventListener("keyup", (e) => jumperMan.keyUpHandler(e));
 
+  // const audio = document.getElementById("salvation");
+  // audio.play();
+  //
+  // const audio = new Audio("./assets/audio/sneakysnitch.mp3");
+  // audio.play();
+
   setInterval(() => game.loop(), 2);
   // setInterval(() => game.prize.prizeFlash(), 150)   //no longer needed since coin is spinning
   setInterval(() => game.newBall(specialBalls[Math.floor(Math.random() * 4)]), 15000);
@@ -610,6 +615,7 @@ class Game {
     this.ctx = ctx;
     this.score = 0;
     this.inSession = true;
+    this.pigAudio = new Audio("./assets/audio/pig.m4a")
   }
 
   checkJumperStatus() {
@@ -960,7 +966,8 @@ class Game {
               && ball.y < jumperBottom){
               if (ball.type === "deadly"){
                 this.balls.splice(this.balls.indexOf(ball), 1);
-                jumper.status === "invincibility" ? null : jumper.health -= 1; //
+                jumper.status === "invincibility" ? null : jumper.health -= 1;
+                // this.pigAudio.play(); //
               }
               else if (ball.type === "ball-reducer") {
                 this.balls.splice(this.balls.indexOf(ball), 1);

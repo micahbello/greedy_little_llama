@@ -171,3 +171,7 @@ width: 18%;
 .footer i {
   color: black;
 }
+
+.footer i:hover {
+  color: grey;
+}

@@ -146,6 +146,11 @@ width: 18%;
 .llama_image {
   width: 90%;
   padding: 0px 0px 0px 30px;
+  transition: 1s;
+}
+
+.llama_image:hover {
+  transform: translateY(50px);
 }
 
 .footer {

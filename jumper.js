@@ -46,12 +46,6 @@ document.addEventListener("DOMContentLoaded", function() {
   window.addEventListener("keydown", (e) => jumperMan.keyDownHandler(e));
   window.addEventListener("keyup", (e) => jumperMan.keyUpHandler(e));
 
-  // const audio = document.getElementById("salvation");
-  // audio.play();
-  //
-  // const audio = new Audio("./assets/audio/sneakysnitch.mp3");
-  // audio.play();
-
   setInterval(() => game.loop(), 2);
   // setInterval(() => game.prize.prizeFlash(), 150)   //no longer needed since coin is spinning
   setInterval(() => game.newBall(specialBalls[Math.floor(Math.random() * 4)]), 15000);

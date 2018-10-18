@@ -190,6 +190,8 @@ class Jumper {
 
 
   update(ctx) {
+    console.log(this.velocity);
+
     ctx.clearRect(0, 0, 600, 300);
 
       if (this.keysPressed[37] && this.keysPressed[38] && this.x > 0 && this.jumped === false) {

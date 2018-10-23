@@ -160,6 +160,7 @@ width: 18%;
   width: 90%;
   padding: 0px 0px 0px 30px;
   transition: 1s;
+  margin-right: 40px;
 }
 
 .llama_image:hover {

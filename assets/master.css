@@ -27,7 +27,7 @@ body {
 
 .instructions {
   text-align: left;
-  margin-left: 40px;
+  margin-left: 10px;
   width: 31%;
   margin-top: -22px;
   padding: 0px 30px 0px 0px;
@@ -160,7 +160,7 @@ width: 18%;
   width: 90%;
   padding: 0px 0px 0px 30px;
   transition: 1s;
-  margin-right: 40px;
+  margin-right: 10px;
 }
 
 .llama_image:hover {

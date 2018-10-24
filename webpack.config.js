@@ -1,7 +1,11 @@
+var path = require('path');
+
 module.exports = {
+  mode: 'development',
   entry: './jumper.js',
   output: {
-    filename: './bundle.js'
+    path: path.resolve(__dirname, "."),
+    filename: 'bundle.js'
   },
   devtool: 'source-map',
 }

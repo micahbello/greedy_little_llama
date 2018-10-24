@@ -36,12 +36,32 @@
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -59,225 +79,97 @@
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./jumper.js");
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ "./jumper.js":
+/*!*******************!*\
+  !*** ./jumper.js ***!
+  \*******************/
+/*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-const SPRITES = {
-  leftPosition1: [19, 77, 25, 44],
-  leftPosition2: [82, 77, 25, 44],
-  leftPosition3: [145, 77, 25, 44],
-  leftPosition4: [208, 77, 25, 44],
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_game__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/game */ "./lib/game.js");
+/* harmony import */ var _lib_jumping_person__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lib/jumping_person */ "./lib/jumping_person.js");
+/* harmony import */ var _lib_ledge__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./lib/ledge */ "./lib/ledge.js");
+/* harmony import */ var _lib_ball__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./lib/ball */ "./lib/ball.js");
+/* harmony import */ var _lib_prize__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./lib/prize */ "./lib/prize.js");
 
-  rightPosition1: [20, 204, 25, 44],
-  rightPosition2: [83, 204, 25, 44],
-  rightPosition3: [146, 204, 25, 44],
-  rightPosition4: [209, 204, 25, 44],
 
-  jumpPosition1: [19, 12, 25, 50],
-  jumpPosition2: [82, 12, 25, 50],
-  jumpPosition3: [145, 12, 25, 50],
-  jumpPosition4: [208, 12, 25, 50]
-}
 
-class Jumper {
-  constructor(color, height, width, x, y) {
-    this.color = color;
-    this.height = height;
-    this.width = width;
-    this.x = x;
-    this.y = y;
-    this.jumped = false;
-    this.keysPressed = [];
-    this.velocity = 0;
-    this.jumpPower = -13;
-    this.health = 5;
-    this.status = "normal"
-    this.statusClock = 0;
-    this.walkCycle = 0;
-    this.spritesheet = new Image();
-    this.spritesheet.src = './assets/images/llama-sprite.png';
-    this.lastDirectionFaced = "none"
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  const canvasEl = document.getElementById("mycanvas");
+  const ctx = canvasEl.getContext("2d");
+
+  canvasEl.width = 600;
+  canvasEl.height = 300;
+
+  let jumperMan = new _lib_jumping_person__WEBPACK_IMPORTED_MODULE_1__["default"]("red", 30, 25, 0, 275)
+
+
+  let balls = [
+  new _lib_ball__WEBPACK_IMPORTED_MODULE_3__["default"]("black", 150, 150),
+  // new Ball("yellow", 10, 150), // TESTS
+  // // new Ball("pink", 100, 150), //
+  // new Ball("green", 50, 150), //
+  // new Ball("yellow", 10, 200), //
+  // // new Ball("pink", 100, 10), //
+  // new Ball("green", 50, 70) //
+  ];
+
+  let ledges = [];
+
+
+  let randomXCoord = (min, max) => {                //used for placing the prize
+    return Math.random() * (max - min) + min;
   }
 
-  keyDownHandler(e) {
-    this.keysPressed[e.keyCode] = (e.type === "keydown")
+  let randomYCoord = (min, max) => {                //used for placing the prize
+    return Math.random() * (max - min) + min;
   }
 
-  keyUpHandler(e) {
-    this.keysPressed[e.keyCode] = (e.type === "keydown");
-
-    if (e.keyCode === 37) {
-      this.lastDirectionFaced = "left";
-    } else if (e.keyCode === 39) {
-      this.lastDirectionFaced = "right";
-    }
-  }
-
-  getSprite() {
-
-    if (this.status === "super-jump"){
-      this.spritesheet.src = "./assets/images/llama-green-sprite.png"
-    } else if (this.status === "invincibility") {
-      this.spritesheet.src = "./assets/images/llama-yellow-sprite.png"
-    } else {
-      this.spritesheet.src = './assets/images/llama-sprite.png';
-    }
-
-    if (!this.keysPressed[39] && !this.keysPressed[37] && !this.keysPressed[38]) {
-      this.walkCycle = 0;
-        if (this.lastDirectionFaced === "none" || this.lastDirectionFaced === "right") {
-      return SPRITES.rightPosition1;
-    } else if (this.lastDirectionFaced === "left") {
-      return SPRITES.leftPosition1;
-        }
-    } else if (this.keysPressed[39] === true) {
-      this.walkCycle += 1;
-      if (this.walkCycle < 2) {
-        return SPRITES.rightPosition1;
-      } else if (this.walkCycle < 20) {
-        return SPRITES.rightPosition2;
-      } else if (this.walkCycle < 55) {
-        return SPRITES.rightPosition3;
-      } else if (this.walkCycle < 65) {
-        return SPRITES.rightPosition4;
-      } else {
-        this.walkCycle = 0;
-        return SPRITES.rightPosition1;
-      }
-    } else if (this.keysPressed[37] === true) {
-      this.walkCycle += 1;
-      if (this.walkCycle < 2) {
-        return SPRITES.leftPosition1;
-      } else if (this.walkCycle < 20) {
-        return SPRITES.leftPosition2;
-      } else if (this.walkCycle < 55) {
-        return SPRITES.leftPosition3;
-      } else if (this.walkCycle < 65) {
-        return SPRITES.leftPosition4;
-      } else {
-        this.walkCycle = 0;
-        return SPRITES.leftPosition1;
-      }
-    } else if (this.keysPressed[38] === true) {
-      this.walkCycle += 1;
-      if (this.walkCycle < 35) {
-        return SPRITES.jumpPosition1;
-      } else if (this.walkCycle < 45) {
-        return SPRITES.jumpPosition2;
-      } else if (this.walkCycle < 55) {
-        return SPRITES.jumpPosition3;
-      } else if (this.walkCycle < 65) {
-        return SPRITES.jumpPosition4;
-      } else {
-        this.walkCycle = 0;
-        return SPRITES.jumpPosition1;
-      }
-    }
-  }
-
-  draw(ctx) {
-    // ctx.fillStyle = this.color;    //comment out, use for testing
-    // ctx.fillRect(this.x, this.y, this.width, this.height);  //comment out, use for testing
-    let sprite = this.getSprite();
-    ctx.drawImage(this.spritesheet, sprite[0], sprite[1], sprite[2], sprite[3], this.x, this.y, sprite[2], sprite[3])
-  }
+  let prize = new _lib_prize__WEBPACK_IMPORTED_MODULE_4__["default"](randomXCoord(10, 550), randomYCoord(0, 250))
 
 
-  update(ctx) {
-    console.log(this.velocity);
+  let game = new _lib_game__WEBPACK_IMPORTED_MODULE_0__["default"](jumperMan, balls, ledges, prize, ctx);
+  let specialBalls = ["red", "green", "yellow", "brown"]
 
-    ctx.clearRect(0, 0, 600, 300);
 
-      if (this.keysPressed[37] && this.keysPressed[38] && this.x > 0 && this.jumped === false) {
-        this.x -= 1;
-        this.velocity = this.jumpPower;
-        this.jumped = true
-      }
-      else if (this.keysPressed[39] && this.keysPressed[38] && this.x < 575 && this.jumped === false) {
-        this.x += 1;
-        this.velocity = this.jumpPower;
-        this.jumped = true
-      }
-      else if (this.keysPressed[37] && this.x > 0) {              //left
-        this.x -= 1;
-      }
-      else if (this.keysPressed[39] && this.x < 575) {             //rigth
-        this.x += 1;
-      }
-      else if (this.keysPressed[38] && this.jumped === false) {    //up
-        this.velocity = this.jumpPower;
-        this.jumped = true;
-      }
+  window.addEventListener("keydown", (e) => game.keyDownHandler(e));
+  window.addEventListener("keydown", (e) => jumperMan.keyDownHandler(e));
+  window.addEventListener("keyup", (e) => jumperMan.keyUpHandler(e));
 
-      if (this.velocity < 0) {
-        this.velocity += 1;
-      } else {
-        this.velocity += 0.019;  //this slows the llama down when he jumps
-      }
+  setInterval(() => game.loop(), 2);
+  // setInterval(() => game.prize.prizeFlash(), 150)   //no longer needed since coin is spinning
+  setInterval(() => game.newBall(specialBalls[Math.floor(Math.random() * 4)]), 15000);
+  setInterval(() => game.checkJumperStatus(), 1000);
+  setInterval(() => game.newLegdes(), 700);     // commented out for testing
 
-      this.y += this.velocity
+  setInterval(() => game.detectLongCollision(), 350)
 
-      if (this.y > 270 || this.y === 270) {
-        this.y = 270;
-        this.jumped = false;
-        this.velocity = 0;
-      }
-
-      this.draw(ctx);
-  }
-
-}
-
-/* harmony default export */ __webpack_exports__["a"] = (Jumper);
+});
 
 
 /***/ }),
-/* 1 */
+
+/***/ "./lib/ball.js":
+/*!*********************!*\
+  !*** ./lib/ball.js ***!
+  \*********************/
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-class Ledge {
-  constructor(color, x, y, speed, direction, trackNumber) {
-    this.color = color;
-    this.height = 10;
-    this.width = 100;
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
-    this.direction = direction;
-    this.trackNumber = trackNumber;
-    this.image = new Image();
-    this.image.src = "./assets/images/cloud-image.png";
-  }
-
-  draw(ctx) {
-    ctx.fillStyle = this.color;
-    // ctx.fillRect(this.x, this.y, this.width, this.height);  //comment out, use for testing
-    ctx.drawImage(this.image, 0, 6, 100, 30 ,this.x, this.y - 7, 100, 30)
-
-  }
-
-  update(ctx) {
-    this.draw(ctx);
-    this.x += this.speed
-  }
-  
-}
-
-/* harmony default export */ __webpack_exports__["a"] = (Ledge);
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
+__webpack_require__.r(__webpack_exports__);
 const SPRITES = {
   leftPosition1: [19, 100, 33, 25],
   leftPosition2: [92, 100, 33, 25],
@@ -447,162 +339,24 @@ class Ball {
   }
 }
 
-/* harmony default export */ __webpack_exports__["a"] = (Ball);
+/* harmony default export */ __webpack_exports__["default"] = (Ball);
 
 
 /***/ }),
-/* 3 */
+
+/***/ "./lib/game.js":
+/*!*********************!*\
+  !*** ./lib/game.js ***!
+  \*********************/
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-const SPRITES = {
-  position1: [15, 13, 27, 29],
-  position2: [49, 13, 27, 29],
-  position3: [83, 13, 27, 29],
-  position4: [115, 13, 27, 29]
-}
-
-
-class Prize {
-  constructor(x, y) {
-    this.color = "blue";
-    this.height = 25;
-    this.width = 25;
-    this.x = x;
-    this.y = y;
-    this.spritesheet = new Image();
-    this.spritesheet.src = './assets/images/coin-sprite.png';
-    this.coinCycle = 0;
-  }
-
-  getSprite() {
-    this.coinCycle += 1;
-
-    if (this.coinCycle < 35) {
-      return SPRITES.position1;
-    } else if (this.coinCycle < 45) {
-      return SPRITES.position2;
-    } else if (this.coinCycle < 55) {
-      return SPRITES.position3;
-    } else if (this.coinCycle < 65) {
-      return SPRITES.position4;
-    } else {
-      this.coinCycle = 0;
-      return SPRITES.position1;
-    }
-  }
-
-  draw(ctx) {
-    // ctx.fillStyle = this.color;                                 //comment out
-    // ctx.fillRect(this.x, this.y, this.width, this.height);      //commnt out
-
-    let sprite = this.getSprite();
-    ctx.drawImage(this.spritesheet, sprite[0], sprite[1], sprite[2], sprite[3], this.x, this.y, sprite[2], sprite[3])
-  }
-
-
-  prizeFlash() {
-    if (this.color === "blue") {
-      this.color = "red";
-    } else {
-      this.color = "blue";
-    }
-  }
-
-  update(ctx) {
-    this.draw(ctx);
-  }
-}
-
-
-/* harmony default export */ __webpack_exports__["a"] = (Prize);
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_game__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_jumping_person__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_ledge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_ball__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_prize__ = __webpack_require__(3);
-
-
-
-
-
-
-document.addEventListener("DOMContentLoaded", function() {
-  const canvasEl = document.getElementById("mycanvas");
-  const ctx = canvasEl.getContext("2d");
-
-  canvasEl.width = 600;
-  canvasEl.height = 300;
-
-  let jumperMan = new __WEBPACK_IMPORTED_MODULE_1__lib_jumping_person__["a" /* default */]("red", 30, 25, 0, 275)
-
-
-  let balls = [
-  new __WEBPACK_IMPORTED_MODULE_3__lib_ball__["a" /* default */]("black", 150, 150),
-  // new Ball("yellow", 10, 150), // TESTS
-  // // new Ball("pink", 100, 150), //
-  // new Ball("green", 50, 150), //
-  // new Ball("yellow", 10, 200), //
-  // // new Ball("pink", 100, 10), //
-  // new Ball("green", 50, 70) //
-  ];
-
-  let ledges = [];
-
-
-  let randomXCoord = (min, max) => {                //used for placing the prize
-    return Math.random() * (max - min) + min;
-  }
-
-  let randomYCoord = (min, max) => {                //used for placing the prize
-    return Math.random() * (max - min) + min;
-  }
-
-  let prize = new __WEBPACK_IMPORTED_MODULE_4__lib_prize__["a" /* default */](randomXCoord(10, 550), randomYCoord(0, 250))
-
-
-  let game = new __WEBPACK_IMPORTED_MODULE_0__lib_game__["a" /* default */](jumperMan, balls, ledges, prize, ctx);
-  let specialBalls = ["red", "green", "yellow", "brown"]
-
-
-  window.addEventListener("keydown", (e) => game.keyDownHandler(e));
-  window.addEventListener("keydown", (e) => jumperMan.keyDownHandler(e));
-  window.addEventListener("keyup", (e) => jumperMan.keyUpHandler(e));
-
-  // const audio = document.getElementById("salvation");
-  // audio.play();
-  //
-  // const audio = new Audio("./assets/audio/sneakysnitch.mp3");
-  // audio.play();
-
-  setInterval(() => game.loop(), 2);
-  // setInterval(() => game.prize.prizeFlash(), 150)   //no longer needed since coin is spinning
-  setInterval(() => game.newBall(specialBalls[Math.floor(Math.random() * 4)]), 15000);
-  setInterval(() => game.checkJumperStatus(), 1000);
-  setInterval(() => game.newLegdes(), 700);     // commented out for testing
-
-  setInterval(() => game.detectLongCollision(), 350)
-
-});
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__jumping_person__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ledge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ball__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__prize__ = __webpack_require__(3);
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _jumping_person__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./jumping_person */ "./lib/jumping_person.js");
+/* harmony import */ var _ledge__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ledge */ "./lib/ledge.js");
+/* harmony import */ var _ball__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ball */ "./lib/ball.js");
+/* harmony import */ var _prize__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./prize */ "./lib/prize.js");
 
 
 
@@ -658,11 +412,11 @@ class Game {
      }
 
      this.ledges = [];
-     this.balls = [new __WEBPACK_IMPORTED_MODULE_2__ball__["a" /* default */]("black", 150, 150)];
-     this.prize = new __WEBPACK_IMPORTED_MODULE_3__prize__["a" /* default */](randomXCoord(10, 550), randomYCoord(0, 250));
+     this.balls = [new _ball__WEBPACK_IMPORTED_MODULE_2__["default"]("black", 150, 150)];
+     this.prize = new _prize__WEBPACK_IMPORTED_MODULE_3__["default"](randomXCoord(10, 550), randomYCoord(0, 250));
      this.score = 0;
      this.inSession = true;
-     this.jumper = new __WEBPACK_IMPORTED_MODULE_0__jumping_person__["a" /* default */]("red", 30, 25, 0, 275);
+     this.jumper = new _jumping_person__WEBPACK_IMPORTED_MODULE_0__["default"]("red", 30, 25, 0, 275);
 
      window.addEventListener("keydown", (e) => this.jumper.keyDownHandler(e));
      window.addEventListener("keyup", (e) => this.jumper.keyUpHandler(e));
@@ -725,32 +479,32 @@ class Game {
 
       if (!(this.ledges.length > 15)) {
 
-      this.ledges.push(new __WEBPACK_IMPORTED_MODULE_1__ledge__["a" /* default */]("#8FBC8F", this.ledgeStartPosition("one", "left"), randomYCoord(37.5, 37.5),
+      this.ledges.push(new _ledge__WEBPACK_IMPORTED_MODULE_1__["default"]("#8FBC8F", this.ledgeStartPosition("one", "left"), randomYCoord(37.5, 37.5),
       -(this.ledgeSpeed("one")), "left", "one"));
 
       //track 2 from y 75 - 90 going right
 
-      this.ledges.push(new __WEBPACK_IMPORTED_MODULE_1__ledge__["a" /* default */]("#8FBC8F", this.ledgeStartPosition("two", "right"), randomYCoord(75, 75),
+      this.ledges.push(new _ledge__WEBPACK_IMPORTED_MODULE_1__["default"]("#8FBC8F", this.ledgeStartPosition("two", "right"), randomYCoord(75, 75),
       this.ledgeSpeed("two"), "right", "two"));
 
       //track 3 from y 108 - 130 going left
 
-      this.ledges.push(new __WEBPACK_IMPORTED_MODULE_1__ledge__["a" /* default */]("#8FBC8F", this.ledgeStartPosition("three", "left"), randomYCoord(108, 108),
+      this.ledges.push(new _ledge__WEBPACK_IMPORTED_MODULE_1__["default"]("#8FBC8F", this.ledgeStartPosition("three", "left"), randomYCoord(108, 108),
       -(this.ledgeSpeed("three")), "left", "three"));
 
       //track 4 from y 150 - 170 going right
 
-      this.ledges.push(new __WEBPACK_IMPORTED_MODULE_1__ledge__["a" /* default */]("#8FBC8F", this.ledgeStartPosition("four", "right"), randomYCoord(150, 150),
+      this.ledges.push(new _ledge__WEBPACK_IMPORTED_MODULE_1__["default"]("#8FBC8F", this.ledgeStartPosition("four", "right"), randomYCoord(150, 150),
       this.ledgeSpeed("four"), "right", "four"));
 
       //track 5 from y 187 - 210 going left
 
-      this.ledges.push(new __WEBPACK_IMPORTED_MODULE_1__ledge__["a" /* default */]("#8FBC8F", this.ledgeStartPosition("five", "left"), randomYCoord(187, 187),
+      this.ledges.push(new _ledge__WEBPACK_IMPORTED_MODULE_1__["default"]("#8FBC8F", this.ledgeStartPosition("five", "left"), randomYCoord(187, 187),
       -(this.ledgeSpeed("five")), "left", "five"));
 
       //track 6 from y 225 - 250 going right
 
-      this.ledges.push(new __WEBPACK_IMPORTED_MODULE_1__ledge__["a" /* default */]("#8FBC8F", this.ledgeStartPosition("six", "right"), randomYCoord(225, 225),
+      this.ledges.push(new _ledge__WEBPACK_IMPORTED_MODULE_1__["default"]("#8FBC8F", this.ledgeStartPosition("six", "right"), randomYCoord(225, 225),
       this.ledgeSpeed("six"), "right", "six"));
 
     }
@@ -768,10 +522,10 @@ class Game {
 
   newBall(color) {
     if (color === "black") {
-    this.balls.push(new __WEBPACK_IMPORTED_MODULE_2__ball__["a" /* default */](color, 595, 5));
+    this.balls.push(new _ball__WEBPACK_IMPORTED_MODULE_2__["default"](color, 595, 5));
     } else {
      if (this.isSpecialBallOut() === false && this.jumper.status === "normal") { ////why does this work but === here doesnt???
-      this.balls.push(new __WEBPACK_IMPORTED_MODULE_2__ball__["a" /* default */](color, 570, 5));
+      this.balls.push(new _ball__WEBPACK_IMPORTED_MODULE_2__["default"](color, 570, 5));
      }
     }
   }
@@ -785,7 +539,7 @@ class Game {
       return Math.random() * (max - min) + min;
     }
 
-    this.prize = new __WEBPACK_IMPORTED_MODULE_3__prize__["a" /* default */](randomXCoord(10, 550), randomYCoord(0, 250))
+    this.prize = new _prize__WEBPACK_IMPORTED_MODULE_3__["default"](randomXCoord(10, 550), randomYCoord(0, 250))
   }
 
   ballLedgeCollision(ball, ledge) {
@@ -924,7 +678,7 @@ class Game {
 
     for (let i = 0; i < allObjects.length; i++) {
       for (let j = 0; j < allObjects.length; j++) {
-        if (allObjects[i] instanceof __WEBPACK_IMPORTED_MODULE_2__ball__["a" /* default */] && allObjects[j] instanceof __WEBPACK_IMPORTED_MODULE_2__ball__["a" /* default */]) {  //check balls/pigs against balls/pigs
+        if (allObjects[i] instanceof _ball__WEBPACK_IMPORTED_MODULE_2__["default"] && allObjects[j] instanceof _ball__WEBPACK_IMPORTED_MODULE_2__["default"]) {  //check balls/pigs against balls/pigs
 
             if (allObjects[i] != allObjects[j]) {
 
@@ -932,7 +686,7 @@ class Game {
 
             }
         }
-        else if (allObjects[i] instanceof __WEBPACK_IMPORTED_MODULE_2__ball__["a" /* default */] && allObjects[j] instanceof __WEBPACK_IMPORTED_MODULE_1__ledge__["a" /* default */]) {
+        else if (allObjects[i] instanceof _ball__WEBPACK_IMPORTED_MODULE_2__["default"] && allObjects[j] instanceof _ledge__WEBPACK_IMPORTED_MODULE_1__["default"]) {
 
             this.ballLedgeCollision(allObjects[i], allObjects[j])
 
@@ -956,7 +710,7 @@ class Game {
             this.score += 1
           }
         }
-        else if (allObjects[i] instanceof __WEBPACK_IMPORTED_MODULE_2__ball__["a" /* default */] && allObjects[j] === this.jumper) {
+        else if (allObjects[i] instanceof _ball__WEBPACK_IMPORTED_MODULE_2__["default"] && allObjects[j] === this.jumper) {
           let ball = allObjects[i];
           let jumper = this.jumper;
           let JumperFront = this.jumper.x + this.jumper.width;
@@ -969,7 +723,6 @@ class Game {
               if (ball.type === "deadly"){
                 this.balls.splice(this.balls.indexOf(ball), 1);
                 jumper.status === "invincibility" ? null : jumper.health -= 1;
-                // this.pigAudio.play(); //
               }
               else if (ball.type === "ball-reducer") {
                 this.balls.splice(this.balls.indexOf(ball), 1);
@@ -1025,9 +778,305 @@ class Game {
 }
 
 
-/* harmony default export */ __webpack_exports__["a"] = (Game);
+/* harmony default export */ __webpack_exports__["default"] = (Game);
+
+
+/***/ }),
+
+/***/ "./lib/jumping_person.js":
+/*!*******************************!*\
+  !*** ./lib/jumping_person.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+const SPRITES = {
+  leftPosition1: [19, 77, 25, 44],
+  leftPosition2: [82, 77, 25, 44],
+  leftPosition3: [145, 77, 25, 44],
+  leftPosition4: [208, 77, 25, 44],
+
+  rightPosition1: [20, 204, 25, 44],
+  rightPosition2: [83, 204, 25, 44],
+  rightPosition3: [146, 204, 25, 44],
+  rightPosition4: [209, 204, 25, 44],
+
+  jumpPosition1: [19, 12, 25, 50],
+  jumpPosition2: [82, 12, 25, 50],
+  jumpPosition3: [145, 12, 25, 50],
+  jumpPosition4: [208, 12, 25, 50]
+}
+
+class Jumper {
+  constructor(color, height, width, x, y) {
+    this.color = color;
+    this.height = height;
+    this.width = width;
+    this.x = x;
+    this.y = y;
+    this.jumped = false;
+    this.keysPressed = [];
+    this.velocity = 0;
+    this.jumpPower = -13;
+    this.health = 5;
+    this.status = "normal"
+    this.statusClock = 0;
+    this.walkCycle = 0;
+    this.spritesheet = new Image();
+    this.spritesheet.src = './assets/images/llama-sprite.png';
+    this.lastDirectionFaced = "none"
+  }
+
+  keyDownHandler(e) {
+    this.keysPressed[e.keyCode] = (e.type === "keydown")
+  }
+
+  keyUpHandler(e) {
+    this.keysPressed[e.keyCode] = (e.type === "keydown");
+
+    if (e.keyCode === 37) {
+      this.lastDirectionFaced = "left";
+    } else if (e.keyCode === 39) {
+      this.lastDirectionFaced = "right";
+    }
+  }
+
+  getSprite() {
+
+    if (this.status === "super-jump"){
+      this.spritesheet.src = "./assets/images/llama-green-sprite.png"
+    } else if (this.status === "invincibility") {
+      this.spritesheet.src = "./assets/images/llama-yellow-sprite.png"
+    } else {
+      this.spritesheet.src = './assets/images/llama-sprite.png';
+    }
+
+    if (!this.keysPressed[39] && !this.keysPressed[37] && !this.keysPressed[38]) {
+      this.walkCycle = 0;
+        if (this.lastDirectionFaced === "none" || this.lastDirectionFaced === "right") {
+      return SPRITES.rightPosition1;
+    } else if (this.lastDirectionFaced === "left") {
+      return SPRITES.leftPosition1;
+        }
+    } else if (this.keysPressed[39] === true) {
+      this.walkCycle += 1;
+      if (this.walkCycle < 2) {
+        return SPRITES.rightPosition1;
+      } else if (this.walkCycle < 20) {
+        return SPRITES.rightPosition2;
+      } else if (this.walkCycle < 55) {
+        return SPRITES.rightPosition3;
+      } else if (this.walkCycle < 65) {
+        return SPRITES.rightPosition4;
+      } else {
+        this.walkCycle = 0;
+        return SPRITES.rightPosition1;
+      }
+    } else if (this.keysPressed[37] === true) {
+      this.walkCycle += 1;
+      if (this.walkCycle < 2) {
+        return SPRITES.leftPosition1;
+      } else if (this.walkCycle < 20) {
+        return SPRITES.leftPosition2;
+      } else if (this.walkCycle < 55) {
+        return SPRITES.leftPosition3;
+      } else if (this.walkCycle < 65) {
+        return SPRITES.leftPosition4;
+      } else {
+        this.walkCycle = 0;
+        return SPRITES.leftPosition1;
+      }
+    } else if (this.keysPressed[38] === true) {
+      this.walkCycle += 1;
+      if (this.walkCycle < 35) {
+        return SPRITES.jumpPosition1;
+      } else if (this.walkCycle < 45) {
+        return SPRITES.jumpPosition2;
+      } else if (this.walkCycle < 55) {
+        return SPRITES.jumpPosition3;
+      } else if (this.walkCycle < 65) {
+        return SPRITES.jumpPosition4;
+      } else {
+        this.walkCycle = 0;
+        return SPRITES.jumpPosition1;
+      }
+    }
+  }
+
+  draw(ctx) {
+    // ctx.fillStyle = this.color;    //comment out, use for testing
+    // ctx.fillRect(this.x, this.y, this.width, this.height);  //comment out, use for testing
+    let sprite = this.getSprite();
+    ctx.drawImage(this.spritesheet, sprite[0], sprite[1], sprite[2], sprite[3], this.x, this.y, sprite[2], sprite[3])
+  }
+
+
+  update(ctx) {
+
+    ctx.clearRect(0, 0, 600, 300);
+
+      if (this.keysPressed[37] && this.keysPressed[38] && this.x > 0 && this.jumped === false) {
+        this.x -= 1;
+        this.velocity = this.jumpPower;
+        this.jumped = true
+      }
+      else if (this.keysPressed[39] && this.keysPressed[38] && this.x < 575 && this.jumped === false) {
+        this.x += 1;
+        this.velocity = this.jumpPower;
+        this.jumped = true
+      }
+      else if (this.keysPressed[37] && this.x > 0) {              //left
+        this.x -= 1;
+      }
+      else if (this.keysPressed[39] && this.x < 575) {             //rigth
+        this.x += 1;
+      }
+      else if (this.keysPressed[38] && this.jumped === false) {    //up
+        this.velocity = this.jumpPower;
+        this.jumped = true;
+      }
+
+      if (this.velocity < 0) {
+        this.velocity += 1;
+      } else {
+        this.velocity += 0.019;  //this slows the llama down when he jumps
+      }
+
+      this.y += this.velocity
+
+      if (this.y > 270 || this.y === 270) {
+        this.y = 270;
+        this.jumped = false;
+        this.velocity = 0;
+      }
+
+      this.draw(ctx);
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Jumper);
+
+
+/***/ }),
+
+/***/ "./lib/ledge.js":
+/*!**********************!*\
+  !*** ./lib/ledge.js ***!
+  \**********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class Ledge {
+  constructor(color, x, y, speed, direction, trackNumber) {
+    this.color = color;
+    this.height = 10;
+    this.width = 100;
+    this.x = x;
+    this.y = y;
+    this.speed = speed;
+    this.direction = direction;
+    this.trackNumber = trackNumber;
+    this.image = new Image();
+    this.image.src = "./assets/images/cloud-image.png";
+  }
+
+  draw(ctx) {
+    ctx.fillStyle = this.color;
+    // ctx.fillRect(this.x, this.y, this.width, this.height);  //comment out, use for testing
+    ctx.drawImage(this.image, 0, 6, 100, 30 ,this.x, this.y - 7, 100, 30)
+
+  }
+
+  update(ctx) {
+    this.draw(ctx);
+    this.x += this.speed
+  }
+  
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Ledge);
+
+
+/***/ }),
+
+/***/ "./lib/prize.js":
+/*!**********************!*\
+  !*** ./lib/prize.js ***!
+  \**********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+const SPRITES = {
+  position1: [15, 13, 27, 29],
+  position2: [49, 13, 27, 29],
+  position3: [83, 13, 27, 29],
+  position4: [115, 13, 27, 29]
+}
+
+
+class Prize {
+  constructor(x, y) {
+    this.color = "blue";
+    this.height = 25;
+    this.width = 25;
+    this.x = x;
+    this.y = y;
+    this.spritesheet = new Image();
+    this.spritesheet.src = './assets/images/coin-sprite.png';
+    this.coinCycle = 0;
+  }
+
+  getSprite() {
+    this.coinCycle += 1;
+
+    if (this.coinCycle < 35) {
+      return SPRITES.position1;
+    } else if (this.coinCycle < 45) {
+      return SPRITES.position2;
+    } else if (this.coinCycle < 55) {
+      return SPRITES.position3;
+    } else if (this.coinCycle < 65) {
+      return SPRITES.position4;
+    } else {
+      this.coinCycle = 0;
+      return SPRITES.position1;
+    }
+  }
+
+  draw(ctx) {
+    // ctx.fillStyle = this.color;                                 //comment out
+    // ctx.fillRect(this.x, this.y, this.width, this.height);      //commnt out
+
+    let sprite = this.getSprite();
+    ctx.drawImage(this.spritesheet, sprite[0], sprite[1], sprite[2], sprite[3], this.x, this.y, sprite[2], sprite[3])
+  }
+
+
+  prizeFlash() {
+    if (this.color === "blue") {
+      this.color = "red";
+    } else {
+      this.color = "blue";
+    }
+  }
+
+  update(ctx) {
+    this.draw(ctx);
+  }
+}
+
+
+/* harmony default export */ __webpack_exports__["default"] = (Prize);
 
 
 /***/ })
-/******/ ]);
+
+/******/ });
 //# sourceMappingURL=bundle.js.map

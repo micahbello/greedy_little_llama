@@ -43,7 +43,6 @@ ballLedgeCollision(ball, ledge) {
         ball.dy = Math.sin(ball.radians) * ball.speed;
   }
 ```
-// <img width="60%" src="./assets/images/demo3.gif"/>
 
 ### Future Features
 * Implement database to store high scores
